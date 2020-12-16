@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+// imports
 use Illuminate\Support\Facades\DB;
 use App\Models\Produto;
 use Illuminate\Http\Request;
@@ -108,7 +108,7 @@ class ProdutoController extends Controller
         // $table = DB::table('produtos');
         
         $retornoProduto = DB::select('SELECT * FROM produtos');
-
+        
         if($retornoProduto) return $retornoProduto;
 
         return response("Não há produtos cadastrado");

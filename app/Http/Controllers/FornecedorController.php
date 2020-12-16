@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+// imports
+use Illuminate\Support\Facades\DB;
 use App\Models\Fornecedor;
 use Illuminate\Http\Request;
 
@@ -35,7 +37,26 @@ class FornecedorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // passo 1
+        $questFornecedor = $request->all();
+        $fornecedor = new Fornecedor();
+
+        // passo 2
+        $fornecedor->nome_empresa_fornecedor = $questFornecedor['nome_empresa_fornecedor'];
+        $fornecedor->nome_intermediador = $questFornecedor['nome_intermediador'];
+        $fornecedor->email_fornecedor = $questFornecedor['email_fornecedor'];
+        $fornecedor->urlsite_fornecedor = $questFornecedor['urlsite_fornecedor'];
+
+        // passo 3
+        $resposta = $fornecedor->save();
+
+        if($resposta) {
+
+            return response($fornecedor, 200);
+        } else {
+
+            return response("falha ao salvar dados do fornecedor", 400);
+        }
     }
 
     /**
@@ -81,5 +102,15 @@ class FornecedorController extends Controller
     public function destroy(Fornecedor $fornecedor)
     {
         //
+    }
+
+
+    public function getFornecedor(){
+
+        $fornecedor = DB::select("select * from fornecedors order by nome_empresa_fornecedor asc;");
+
+        if($fornecedor) return response($fornecedor, 200);
+
+        return response("Falha ao buscar informações dos fornecedores!=/");
     }
 }

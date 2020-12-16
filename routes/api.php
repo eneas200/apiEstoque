@@ -20,6 +20,7 @@ use App\Http\Controllers\ProdutoController;
 // rota de login do funcionario
 Route::post('funcionarios/login', [FuncionarioController::class, 'login']);
 Route::get('produtos/getProdutos', [ProdutoController::class, 'getProdutos']);
+Route::get('fornecedor/getFornecedor', [FornecedorController::class, 'getFornecedor']);
 Route::resource('funcionarios', FuncionarioController::class);
 Route::resource('fornecedor', FornecedorController::class );
 Route::resource('produtos', ProdutoController::class );
