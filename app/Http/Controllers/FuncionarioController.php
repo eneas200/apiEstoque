@@ -91,7 +91,7 @@ class FuncionarioController extends Controller
         //
 
         if (!$funcionario) return response('Dados Inválido', 400);
-
+        
         $nomeFuncionario = $request->input('nome_funcionario');
         $emailFuncionario = $request->input('email_funcionario');
         $senhaFuncionario = $request->input('senha_funcionario');
@@ -118,6 +118,7 @@ class FuncionarioController extends Controller
 
         if ($retorno) return response($funcionario, 200);
         
+        return response($funcionario, 200);
         return response('Erro ao atualizar o usuário.', 400);
     }
 
@@ -133,18 +134,20 @@ class FuncionarioController extends Controller
     }
 
     public function login(Request $request) {
-        $email = $request->input('email_funcionario');
-        $senha = $request->input('senha_funcionario');
-
+        $dados = $request->all();
+        $email = $dados['email_funcionario'];
+        $senha = $dados['senha_funcionario'];
+        
         if( !$email || !$senha ) {
             return response("Credenciais invalidas.", 400);
         }
         
         $funcionario = Funcionarios::where('email_funcionario', $email)->first();
-
+        
         if(!$funcionario){
             return response("Credenciais invalidas.", 400);
-        }
+        }       
+
         if(!Hash::check($senha, $funcionario->senha_funcionario)) {
             return response("Credenciais invalidas.", 400);
         }

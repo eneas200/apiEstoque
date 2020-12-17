@@ -107,7 +107,7 @@ class ProdutoController extends Controller
     public function getProdutos(){
         // $table = DB::table('produtos');
         
-        $retornoProduto = DB::select('SELECT * FROM produtos');
+        $retornoProduto = DB::select('SELECT * FROM produtos ORDER BY id DESC, nome_produto ASC;');
         
         if($retornoProduto) return $retornoProduto;
 
