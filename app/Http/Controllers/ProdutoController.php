@@ -62,11 +62,7 @@ class ProdutoController extends Controller
     public function show(Produto $produto)
     {
         //
-        echo "metodo show";
-        $produto = new Produto();
-        $nome = $produto->get('nome_produto');
-        print_r($nome);
-        // var_dump($produto->all());
+         
         
     }
 
@@ -114,5 +110,5 @@ class ProdutoController extends Controller
         return response("Não há produtos cadastrado");
         
     }
-
+ 
 }

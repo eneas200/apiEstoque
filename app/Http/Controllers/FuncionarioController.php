@@ -38,13 +38,19 @@ class FuncionarioController extends Controller
     public function store(Request $request)
     {
         //
-        $us = $request->all();
+        $funcionarioRequest = $request->all();
         $funcionario = new Funcionarios();
-        $funcionario->nome_funcionario = $us["nome_funcionario"];
-        $funcionario->email_funcionario = $us["email_funcionario"];
-        $funcionario->senha_funcionario = $us["senha_funcionario"];
+        $funcionario->nome_funcionario = $funcionarioRequest['nome_funcionario'];
+        $funcionario->email_funcionario =$funcionarioRequest['email_funcionario'];
+        $funcionario->senha_funcionario =$funcionarioRequest['senha_funcionario'];      
+        
+        
+        $emailExiste = Funcionarios::where('email_funcionario', $funcionarioRequest['email_funcionario'])->first();
+        if($emailExiste){
+            return response("Já existe usuario com este email registrado!", 400);
+        }
 
-        $confirmarSenha = $us['confirmarSenha_funcionario'];
+        $confirmarSenha = $funcionarioRequest['confirmarSenha_funcionario'];
         if( $funcionario->senha_funcionario != $confirmarSenha ) {
             return response("as senha não coincidem.", 400);
         }
@@ -54,7 +60,6 @@ class FuncionarioController extends Controller
         // inserindo dados no banco
         $funcionario->save();
         return $funcionario;
-
     }
 
     /**
@@ -105,14 +110,17 @@ class FuncionarioController extends Controller
             if ($checkEmail) return response('Já existe um usuário com esse email', 422);
         }
 
-        if($senhaFuncionario && $senhaFuncionario != $confirmarSenha) {
-            return response('As senhas não coincidem.', 422);
-        } else {
-            $funcionario->senha_funcionario = Hash::make($senhaFuncionario);
+        if($senhaFuncionario) {
+            if($senhaFuncionario != $confirmarSenha) return response('As senhas não coincidem.', 422);
+
         }
 
         $funcionario->nome_funcionario = $nomeFuncionario;
         $funcionario->email_funcionario = $emailFuncionario;
+        
+        if($senhaFuncionario) {
+            $funcionario->senha_funcionario = Hash::make($senhaFuncionario);
+        }
 
         $retorno = $funcionario->save();
 
@@ -134,9 +142,9 @@ class FuncionarioController extends Controller
     }
 
     public function login(Request $request) {
-        $dados = $request->all();
-        $email = $dados['email_funcionario'];
-        $senha = $dados['senha_funcionario'];
+        
+        $email = $request->input('email_funcionario');
+        $senha = $request->input('senha_funcionario');
         
         if( !$email || !$senha ) {
             return response("Credenciais invalidas.", 400);
@@ -153,7 +161,5 @@ class FuncionarioController extends Controller
         }
     
         return $funcionario;
-
-
     }
 }
